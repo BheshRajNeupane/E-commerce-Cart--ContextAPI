@@ -2,8 +2,9 @@ import { useState } from 'react';
 
 import Header from './components/Header.jsx';
 import Shop from './components/Shop.jsx';
+import { CartContext } from './store/shopping-cart-context.jsx'
 import { DUMMY_PRODUCTS } from './dummy-products.js';
-
+import  Product from './components/Product.jsx'
 function App() {
   const [shoppingCart, setShoppingCart] = useState({
     items: [],
@@ -66,13 +67,26 @@ function App() {
   }
 
   return (
-    <>
+    //The default value is set when creating the context is only used if a component that was not wrapped by the Provider component tries to access the context value
+    <CartContext.Provider value={{ items:[]}}>
       <Header
         cart={shoppingCart}
         onUpdateCartItemQuantity={handleUpdateCartItemQuantity}
       />
-      <Shop onAddItemToCart={handleAddItemToCart} />
-    </>
+      <Shop >
+   
+        {
+        DUMMY_PRODUCTS.map((product) => (
+          <li key={product.id}>
+            <Product {...product} onAddToCart={handleAddItemToCart} />
+          </li>
+        ))
+        }
+
+        </Shop>
+
+      
+    </CartContext.Provider>
   );
 }
 
